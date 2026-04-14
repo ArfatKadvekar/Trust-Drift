@@ -1,0 +1,95 @@
+
+======================================================================================
+SECURITY REPORT
+======================================================================================
+
+Row 1 [Label: Detected Threat]
+
+======================================================================
+SUSPICIOUS TRAFFIC DETECTED
+======================================================================
+
+Trust Score   : 0.32 (Zone C — Restricted)
+Severity      : 1.00
+
+Attack Pattern:
+Atypical Network Activity
+
+Analysis:
+The system noticed a pattern of behavior that doesn't fit the 'normal' routine of this user or device.
+While not definitely an attack, it's different enough to warrant a quick review.
+
+Key Evidence:
+• feature_37 → high (1.00 vs normal 0.0–0.30)
+• feature_15 → high (1.00 vs normal 0.0–0.30)
+
+Detection Source:
+Behavioral drift detected by Autoencoder (AE)
+
+Confidence:
+High
+
+System Action:
+Quarantine / Blocked. Connection terminated.
+======================================================================
+
+Row 2 [Label: Detected Threat]
+
+======================================================================
+SUSPICIOUS TRAFFIC DETECTED
+======================================================================
+
+Trust Score   : 0.11 (Zone C — Restricted)
+Severity      : 1.00
+
+Attack Pattern:
+Atypical Network Activity
+
+Analysis:
+The system noticed a pattern of behavior that doesn't fit the 'normal' routine of this user or device.
+While not definitely an attack, it's different enough to warrant a quick review.
+
+Key Evidence:
+• feature_37 → high (1.00 vs normal 0.0–0.30)
+• feature_15 → high (1.00 vs normal 0.0–0.30)
+
+Detection Source:
+Behavioral drift detected by Autoencoder (AE)
+
+Confidence:
+High
+
+System Action:
+Quarantine / Blocked. Connection terminated.
+======================================================================
+
+Row 3 [Label: Detected Threat]
+
+======================================================================
+SUSPICIOUS TRAFFIC DETECTED
+======================================================================
+
+Trust Score   : 0.02 (Zone C — Restricted)
+Severity      : 1.00
+
+Attack Pattern:
+Atypical Network Activity
+
+Analysis:
+The system noticed a pattern of behavior that doesn't fit the 'normal' routine of this user or device.
+While not definitely an attack, it's different enough to warrant a quick review.
+
+Key Evidence:
+• feature_37 → high (1.00 vs normal 0.0–0.30)
+• feature_15 → high (1.00 vs normal 0.0–0.30)
+
+Detection Source:
+Behavioral drift detected by Autoencoder (AE)
+
+Confidence:
+High
+
+System Action:
+Quarantine / Blocked. Connection terminated.
+======================================================================
+

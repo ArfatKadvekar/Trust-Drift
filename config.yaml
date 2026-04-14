@@ -1,0 +1,166 @@
+# Trust-Drift PoC Configuration
+# ===========================================
+
+# Global Settings
+debug: false
+log_dir: "./logs"
+log_level: "INFO"  # DEBUG, INFO, WARNING, ERROR
+
+# Pipeline Settings
+pipeline:
+  batch_size: 512
+  timeout_seconds: 30
+
+# Feature Processing
+features:
+  scaler_path: "./pipeline/severity/models/scaler.pkl"
+  feature_cols_path: "./pipeline/severity/models/feature_cols.pkl"
+
+# Severity Scoring (Anomaly Detection)
+severity:
+  models_dir: "./pipeline/severity/models"
+  autoencoder_path: "./pipeline/severity/models/autoencoder.keras"
+  encoder_path: "./pipeline/severity/models/encoder.keras"
+  iso_forest_path: "./pipeline/severity/models/iso_forest.pkl"
+  scaler_path: "./pipeline/severity/models/scaler.pkl"
+  feature_cols_path: "./pipeline/severity/models/feature_cols.pkl"
+  
+  # FALLBACK & SIMULATION SETTINGS
+  # If models are missing, use fallback simulation mode
+  allow_fallback: true          # Enable fallback when models missing
+  fallback_seed: 42             # Seed for deterministic simulation
+  
+  # Normalization
+  percentile_low: 1
+  percentile_high: 99
+  
+  # EMA Smoothing
+  ema_enabled: true
+  ema_alpha: 0.3
+  
+  # Top features to extract
+  top_n_features: 5
+
+# Trust Engine
+trust:
+  # Profile selection: "High", "Balanced", "Low"
+  profile: "Balanced"
+  
+  profiles:
+    High:
+      lambda_: 3.0      # Fast decay
+      mu: 0.01          # Slow recovery
+      anomaly_threshold: 0.5
+      initial_trust: 1.0
+    
+    Balanced:
+      lambda_: 1.5      # Medium decay
+      mu: 0.05          # Medium recovery
+      anomaly_threshold: 0.5
+      initial_trust: 1.0
+    
+    Low:
+      lambda_: 0.5      # Slow decay
+      mu: 0.10          # Fast recovery
+      anomaly_threshold: 0.5
+      initial_trust: 1.0
+
+# Enforcement Zones
+enforcement:
+  zones:
+    A:
+      trust_min: 0.8
+      action: "allow"
+      description: "Full network access granted"
+    B:
+      trust_min: 0.4
+      trust_max: 0.8
+      action: "throttle"
+      description: "Step-up MFA + session throttling"
+      rate_limit_rps: 10
+      mfa_required: true
+    C:
+      trust_max: 0.4
+      action: "block"
+      description: "Quarantine — session terminated"
+
+# Firewall Simulation 🔥
+firewall:
+  enabled: true
+  
+  # Behavioral simulation
+  throttle_latency_min_ms: 50
+  throttle_latency_max_ms: 200
+  
+  # State tracking
+  track_entity_state: true
+  quarantine_expiry_minutes: 60
+  
+  # Actions
+  actions:
+    ALLOW:
+      latency_ms: 1
+      status: "success"
+    THROTTLE:
+      latency_ms_min: 50
+      latency_ms_max: 200
+      rate_limit_rps: 10
+      status: "delayed"
+    BLOCK:
+      latency_ms: 0
+      status: "denied"
+      reason: "Zone C - blocked"
+    QUARANTINE:
+      latency_ms: 0
+      status: "quarantined"
+      reason: "Entity isolated"
+
+# API Server
+api:
+  host: "127.0.0.1"
+  port: 8000
+  workers: 1
+
+  # Dashboard integration (CORS)
+  cors:
+    # Update this list with your frontend URLs in production
+    # Example: ["http://localhost:3000", "https://dashboard.example.com"]
+    allowed_origins: ["*"]
+    allow_credentials: false
+    allow_methods: ["*"]
+    allow_headers: ["*"]
+  
+  # Rate limiting
+  rate_limit:
+    enabled: true
+    requests_per_minute: 1000
+
+# Logging Output Files
+logging:
+  input_file: "./logs/input.json"
+  features_file: "./logs/features.json"
+  severity_file: "./logs/severity.json"
+  explainability_file: "./logs/explainability.json"
+  trust_file: "./logs/trust.json"
+  enforcement_file: "./logs/enforcement.json"
+  firewall_file: "./logs/firewall_logs.json"
+  debug_trace_file: "./logs/debug_trace.json"
+
+# Demo / Simulation Modes
+demo:
+  # Modes: "normal_traffic", "sudden_attack", "low_and_slow"
+  mode: "normal_traffic"
+  
+  # For simulation mode
+  normal_traffic:
+    severity_distribution: "normal"
+    mean: 0.15
+    std: 0.05
+  
+  sudden_attack:
+    duration_seconds: 10
+    severity_spike: 0.90
+  
+  low_and_slow:
+    duration_seconds: 300
+    severity_increase_rate: 0.01  # per update
